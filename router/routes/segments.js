@@ -3,9 +3,6 @@ const segments = Router();
 
 // Get all data
 segments.get('/', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch all rows from table Segments
         const data = await client.query('SELECT * FROM Segments');
@@ -19,9 +16,6 @@ segments.get('/', async(req, res) => {
 
 // Get data with id
 segments.get('/:id', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch row from table Segments where id is equal to request id parameter
         const id = parseInt(req.params.id);
@@ -37,16 +31,13 @@ segments.get('/:id', async(req, res) => {
 
 // Add data
 segments.post('/', async (req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Get longitude and latitude from request body
-        const { lon, lat, type} = req.body;
+        const { start_lat, start_lon, end_lat, end_lon } = req.body;
         const timestamp = new Date();
-        const data = [lon, lat, timestamp, type];
+        const data = [start_lat, start_lon, end_lat, end_lon, timestamp];
         // Insert new row with data into table Segments
-        await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4)`, data);
+        await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5)`, data);
         return res.status(200).send(data);
     } catch(err) {
         console.error(err);
@@ -56,9 +47,6 @@ segments.post('/', async (req, res) => {
 
 // Delete data
 segments.delete('/:id', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch row from table Segments where id is equal to request id parameter and delete it
         const id = parseInt(req.params.id);

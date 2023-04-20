@@ -11,6 +11,13 @@ const connectDB = async() => {
 
 connectDB();
 
+router.use(function(req, res, next) {
+    // Authorize request
+    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
+    if(req.headers.authorization != `Basic ${process.env.SECRET_KEY}`) return res.status(401).json({message: 'Unauthorized request'});
+    next();
+});
+
 
 
 module.exports = router;

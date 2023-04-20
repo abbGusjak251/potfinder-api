@@ -3,9 +3,6 @@ const measurements = Router();
 
 // Get all data
 measurements.get('/', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch all rows from table Measurements
         const data = await client.query('SELECT * FROM Measurements');
@@ -19,9 +16,6 @@ measurements.get('/', async(req, res) => {
 
 // Get data with id
 measurements.get('/:id', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch row from table Measurements where id is equal to request id parameter
         const id = parseInt(req.params.id);
@@ -37,9 +31,6 @@ measurements.get('/:id', async(req, res) => {
 
 // Add data
 measurements.post('/', async (req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Get x acceleration and segment id from request body
         const { x, segment_id } = req.body;
@@ -55,9 +46,6 @@ measurements.post('/', async (req, res) => {
 
 // Delete data
 measurements.delete('/:id', async(req, res) => {
-    // Authorize request
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != 'Basic YXhlbDEyMw==') return res.status(401).json({message: 'Unauthorized request'});
     try {
         // Fetch row from table Measurements where id is equal to request id parameter and delete it
         const id = parseInt(req.params.id);

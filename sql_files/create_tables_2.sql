@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS public.segments
 (
     id SERIAL,
     start_lat double precision,
+    start_lon double precision,
     end_lat double precision,
+    end_lon double precision,
     "timestamp" timestamp without time zone,
     CONSTRAINT segments_pkey PRIMARY KEY (id)
 );
