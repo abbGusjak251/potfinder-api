@@ -11,29 +11,48 @@
 </head>
 <body>
     <div style="text-align: center;">
-        <p>Sending Location...</p>
+        <p id="status-text">Sending Location...</p>
     </div>
 </body>
 </html>
 
 <script>
-    setInterval(() => {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            const data = {lon: pos.coords.longitude, lat: pos.coords.latitude, secret_key: 'axel123'};
-            console.log(data);
-            fetch('http://localhost:3000/api/data', {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data),
-                method: 'POST'
-            }).then((response) => response.json()).then((data) => {
+    const secret = new URLSearchParams(window.location.search).get('secret');
+    if(secret) {
+        setInterval(() => {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const data = {lon: pos.coords.longitude, lat: pos.coords.latitude};
                 console.log(data);
-            }).catch((err) => {
-                console.error(err);
+                // fetch('http://localhost:3000/api/data', {
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'Authorization': `Basic ${btoa(secret)}`
+                //     },
+                //     body: JSON.stringify(data),
+                //     method: 'POST'
+                // }).then((response) => response.json()).then((data) => {
+                //     console.log(data);
+                //     document.querySelector('#status-text').innerText = "Sending Location...";
+                // }).catch((err) => {
+                //     console.error(err);
+                //     document.querySelector('#status-text').innerText = "Failed to send location";
+                // });
+                console.log(`Acceleration along the X-axis ${acl.x}`);
+                console.log(`Acceleration along the Y-axis ${acl.y}`);
+                console.log(`Acceleration along the Z-axis ${acl.z}`);
             });
+        }, 5000);
+        const acl = new Accelerometer({ frequency: 60 });
+
+        acl.start();
+        acl.addEventListener("reading", () => {
+            console.log(`Acceleration along the X-axis ${acl.x}`);
+            console.log(`Acceleration along the Y-axis ${acl.y}`);
+            console.log(`Acceleration along the Z-axis ${acl.z}`);
         });
-    }, 1000);
+    } else {
+        document.querySelector('#status-text').innerText = "Unauthenticated";
+    }
 </script>
 
 <style>
