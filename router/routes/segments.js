@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { client } = require('../../db.js');
 const segments = Router();
 
 // Get all data
@@ -37,8 +38,12 @@ segments.post('/', async (req, res) => {
         const timestamp = new Date();
         const data = [start_lat, start_lon, end_lat, end_lon, timestamp];
         // Insert new row with data into table Segments
-        await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5)`, data);
-        return res.status(200).send(data);
+        await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5) RETURNING id`, data, (err, resp) => {
+            if(err) {
+                throw err;
+            }
+            return res.status(200).send(resp.rows);
+        });
     } catch(err) {
         console.error(err);
         return res.status(400).json({message: err.message});

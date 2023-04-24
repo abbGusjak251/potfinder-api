@@ -1,10 +1,12 @@
 const { Router } = require('express');
+const { client } = require('../../db.js');
 const measurements = Router();
 
 // Get all data
 measurements.get('/', async(req, res) => {
     try {
         // Fetch all rows from table Measurements
+        // await client.connect();
         const data = await client.query('SELECT * FROM Measurements');
         return res.json(data.rows).send();
     } catch(err) {
@@ -36,8 +38,12 @@ measurements.post('/', async (req, res) => {
         const { x, segment_id } = req.body;
         const data = [x, segment_id];
         // Insert new row with data into table Measurements
-        await client.query(`INSERT INTO Measurements VALUES(DEFAULT, $1, $2)`, data);
-        return res.status(200).send(data);
+        await client.query(`INSERT INTO Measurements VALUES(DEFAULT, $1, $2) RETURNING id`, data, (err, resp) => {
+            if(err) {
+                throw err;
+            }
+            return res.status(200).send(resp.rows);
+        });
     } catch(err) {
         console.error(err);
         return res.status(400).json({message: err.message});

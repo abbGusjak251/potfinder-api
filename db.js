@@ -10,4 +10,11 @@ const client = new Client({
     port: process.env.PGPORT
 });
 
+const connectDB = async() => {
+    await client.connect();
+    console.log("Connected");
+};
+
+connectDB();
+
 module.exports = { client };
