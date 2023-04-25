@@ -34,16 +34,18 @@ segments.get('/:id', async(req, res) => {
 segments.post('/', async (req, res) => {
     try {
         // Get longitude and latitude from request body
-        const { start_lat, start_lon, end_lat, end_lon } = req.body;
-        const timestamp = new Date();
-        const data = [start_lat, start_lon, end_lat, end_lon, timestamp];
-        // Insert new row with data into table Segments
-        await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5) RETURNING id`, data, (err, resp) => {
-            if(err) {
-                throw err;
-            }
-            return res.status(200).send(resp.rows);
+        const inserts = req.body.inserts;
+        const ids = inserts.map(async(insert) => {
+            const { start_lat, start_lon, end_lat, end_lon } = insert;
+            const timestamp = new Date();
+            const data = [start_lat, start_lon, end_lat, end_lon, timestamp];
+            // Insert new row with data into table Measurements
+            const resp = await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5) RETURNING id`, data);
+            console.log(resp.rows[0].id)
+            return resp.rows[0];
         });
+        const out = await Promise.all(ids);
+        return res.status(200).send(out);
     } catch(err) {
         console.error(err);
         return res.status(400).json({message: err.message});
