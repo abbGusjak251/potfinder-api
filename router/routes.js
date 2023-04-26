@@ -10,7 +10,7 @@ const segments = require('./routes/segments');
 
 router.use((req, res, next) => {
     // Authorize request
-    console.log(`Basic ${secret.toString('base64')}`)
+    console.log(`Basic ${secret}`)
     if(!req.headers.authorization) {
         res.setHeader('WWW-Authenticate', 'Basic');
         return res.status(401).json({message: 'No authorization header provided'});
