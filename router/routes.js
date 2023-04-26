@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const secret = Buffer.from(process.env.SECRET_KEY || 'secret').toString("base64");
+const env_secret = process.env.SECRET_KEY || 'secret';
+const secret = Buffer.from(env_secret).toString("base64");
 
 
 
