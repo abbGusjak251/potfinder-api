@@ -2,26 +2,6 @@ const { Router } = require('express');
 const { client } = require('../../db.js');
 const measurements = Router();
 
-const postMeasurements = (inserts) => {
-    return new Promise((resolve, reject) => {
-        let ids = [];
-        inserts.forEach(async(insert, index) => {
-            const { x, segment_id } = insert;
-            const data = [x, segment_id];
-            // Insert new row with data into table Measurements
-            await client.query(`INSERT INTO Measurements VALUES(DEFAULT, $1, $2) RETURNING id`, data, (err, resp) => {
-                if(err) {
-                    reject(err);
-                }
-                console.log(resp.rows[0].id);
-                ids.push(resp.rows[0].id);
-            });
-            console.log(ids)
-        });
-        resolve(ids);
-    });
-};
-
 // Get all data
 measurements.get('/', async(req, res) => {
     try {

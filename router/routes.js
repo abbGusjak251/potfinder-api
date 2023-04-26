@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const secret = process.env.SECRET_KEY || 'secret';
+const secret = Buffer.from(process.env.SECRET_KEY || 'secret').toString("base64");
 
 
 
@@ -10,8 +10,11 @@ const segments = require('./routes/segments');
 router.use((req, res, next) => {
     // Authorize request
     console.log(`Basic ${secret.toString('base64')}`)
-    if(!req.headers.authorization) return res.status(403).json({message: 'No authorization header provided'});
-    if(req.headers.authorization != `Basic ${secret.toString('base64')}`) return res.status(401).json({message: 'Unauthorized request'});
+    if(!req.headers.authorization) {
+        res.setHeader('WWW-Authenticate', 'Basic');
+        return res.status(401).json({message: 'No authorization header provided'});
+    }
+    if(req.headers.authorization !== `Basic ${secret}`) return res.status(401).json({message: 'Unauthorized request'});
     next();
 });
 
