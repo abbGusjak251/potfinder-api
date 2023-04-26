@@ -34,7 +34,7 @@ segments.get('/:id', async(req, res) => {
 segments.post('/', async (req, res) => {
     try {
         // Get longitude and latitude from request body
-        const inserts = req.body.inserts;
+        const inserts = req.body;
         const ids = inserts.map(async(insert) => {
             const { start_lat, start_lon, end_lat, end_lon } = insert;
             const timestamp = new Date();

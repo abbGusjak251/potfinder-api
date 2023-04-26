@@ -55,7 +55,7 @@ measurements.get('/:id', async(req, res) => {
 measurements.post('/', async (req, res) => {
     try {
         // Get x acceleration and segment id from request body
-        const inserts = req.body.inserts;
+        const inserts = req.body;
         const ids = inserts.map(async(insert) => {
             const { x, segment_id } = insert;
             const data = [x, segment_id];
