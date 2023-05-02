@@ -45,7 +45,7 @@ measurements.post('/', async (req, res) => {
             return resp.rows[0];
         });
         const out = await Promise.all(ids);
-        return res.status(200).send(out);
+        return res.status(201).send(out);
         
     } catch(err) {
         console.error(err);
