@@ -33,10 +33,11 @@ segments.get('/:id', async(req, res) => {
 // Get mean quality with id
 segments.get('/mean/:id', async(req, res) => {
     try {
-        // Fetch row from table Segments where id is equal to request id parameter
+        // Fetch row from table Measurements where segment_id is equal to request id parameter
         const id = parseInt(req.params.id);
         const measurements = await client.query(`SELECT * FROM Measurements WHERE segment_id=$1`, [id]);
         const data = measurements.rows;
+        // Calculate mean acceleration if measurements exist
         let mean = 0;
         let sum = 0;
         if (data.length !== 0) {
@@ -59,6 +60,7 @@ segments.post('/', async (req, res) => {
     try {
         // Get longitude and latitude from request body
         const inserts = req.body;
+        // Push list of segments to database
         const ids = inserts.map(async(insert) => {
             const { start_lat, start_lon, end_lat, end_lon } = insert;
             const timestamp = new Date();

@@ -1,14 +1,15 @@
 const { Router } = require('express');
 require('dotenv').config();
 const router = Router();
+
+// Import secret key from environment variables and convert it to base64
 const env_secret = process.env.SECRET_KEY || 'secret';
 const secret = Buffer.from(env_secret, 'ascii').toString('base64');
-
-
 
 const measurements = require('./routes/measurements');
 const segments = require('./routes/segments');
 
+// Middleware function which makes sure that user is authenticated
 router.use((req, res, next) => {
     // Authorize request
     if(!req.headers.authorization) {
@@ -19,6 +20,7 @@ router.use((req, res, next) => {
     next();
 });
 
+// Use API routes
 router.use('/measurements', measurements);
 router.use('/segments', segments);
 

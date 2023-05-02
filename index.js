@@ -12,10 +12,12 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
+// Web app
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/public/index.html');
 });
 
+// API home page
 app.get('/api', (req, res) => {
     res.send("<b>Welcome to Potfinder API</b>");
 });
