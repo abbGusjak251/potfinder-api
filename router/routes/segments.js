@@ -61,12 +61,13 @@ segments.post('/', async (req, res) => {
         // Get longitude and latitude from request body
         const inserts = req.body;
         // Push list of segments to database
+        console.log(inserts);
         const ids = inserts.map(async(insert) => {
             const { start_lat, start_lon, end_lat, end_lon } = insert;
             const timestamp = new Date();
             const data = [start_lat, start_lon, end_lat, end_lon, timestamp];
             // Insert new row with data into table Measurements
-            const resp = await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5) RETURNING id, `, data);
+            const resp = await client.query(`INSERT INTO Segments VALUES(DEFAULT, $1, $2, $3, $4, $5) RETURNING id`, data);
             console.log(resp.rows[0].id)
             return resp.rows[0];
         });

@@ -1,8 +1,8 @@
 # Potfinder API
 
-The API for Potfinder 
+An API for Potfinder UF AB. It allows users to easily get, post, change and delete segments and measurements in the potfinder database. 
 
-A project by Axel Åhman, Mattias Ohlsson and Gustav Jakobsson
+A project by Axel Åhman, Mattias Ohlsson and Gustav Jakobsson.
 
 ## Get all location pinpoints
 
