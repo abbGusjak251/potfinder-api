@@ -8,6 +8,7 @@ const secret = Buffer.from(env_secret, 'ascii').toString('base64');
 
 const measurements = require('./routes/measurements');
 const segments = require('./routes/segments');
+const query = require('./routes/query');
 
 // Middleware function which makes sure that user is authenticated
 router.use((req, res, next) => {
@@ -23,5 +24,6 @@ router.use((req, res, next) => {
 // Use API routes
 router.use('/measurements', measurements);
 router.use('/segments', segments);
+router.use('/query', query);
 
 module.exports = router;
