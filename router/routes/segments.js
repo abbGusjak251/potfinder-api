@@ -7,7 +7,7 @@ segments.get('/', async(req, res) => {
     try {
         // Fetch all rows from table Segments
         const data = await client.query('SELECT * FROM Segments');
-        return res.json(data.rows).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);
@@ -20,9 +20,9 @@ segments.get('/:id', async(req, res) => {
     try {
         // Fetch row from table Segments where id is equal to request id parameter
         const id = parseInt(req.params.id);
-        const data = await client.query(`SELECT * FROM Segments WHERE id < $1 AND id > $2`, [id+1, id-1]);
+        const data = await client.query(`SELECT * FROM Segments WHERE id=$1`, [id]);
         // Send rows
-        return res.json(data).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);
@@ -47,7 +47,7 @@ segments.get('/mean/:id', async(req, res) => {
             mean = sum/data.length;
         }
         // Send rows
-        return res.json({ mean: mean}).send();
+        return res.json({ mean: mean});
     } catch(err) {
         // Log and send error to client
         console.error(err);
@@ -86,7 +86,7 @@ segments.delete('/:id', async(req, res) => {
         const id = parseInt(req.params.id);
         const data = await client.query(`DELETE FROM Segments WHERE id < $1 AND id > $2`, [id+1, id-1]);
         // Send rows
-        return res.json(data.rows).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);

@@ -6,9 +6,8 @@ const measurements = Router();
 measurements.get('/', async(req, res) => {
     try {
         // Fetch all rows from table Measurements
-        // await client.connect();
         const data = await client.query('SELECT * FROM Measurements');
-        return res.json(data.rows).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);
@@ -21,9 +20,9 @@ measurements.get('/:id', async(req, res) => {
     try {
         // Fetch row from table Measurements where id is equal to request id parameter
         const id = parseInt(req.params.id);
-        const data = await client.query(`SELECT * FROM Measurements WHERE id < $1 AND id > $2`, [id+1, id-1]);
+        const data = await client.query(`SELECT * FROM Measurements WHERE segment_id=$1`, [id]);
         // Send rows
-        return res.json(data).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);
@@ -61,7 +60,7 @@ measurements.delete('/:id', async(req, res) => {
         const id = parseInt(req.params.id);
         const data = await client.query(`DELETE FROM Measurements WHERE id < $1 AND id > $2`, [id+1, id-1]);
         // Send rows
-        return res.json(data.rows).send();
+        return res.json(data.rows);
     } catch(err) {
         // Log and send error to client
         console.error(err);
