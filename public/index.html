@@ -15,7 +15,7 @@
 </head>
 <body>
     <div style="text-align: center;">
-        <p id="status-text">Sending Location...</p>
+        <p id="status-text">Loading Map...</p>
     </div>
     <div id="map"></div>
 </body>
@@ -35,7 +35,7 @@
         method: 'GET'
     }).then((response) => response.json()).then((segments) => {
         console.log(segments);
-        document.querySelector('#status-text').innerText = "Sending Location...";
+        document.querySelector('#status-text').innerText = "Potfinder Map";
         segments.forEach(segment => {
             console.log(segment)
             if(segment.start_lat === null || segment.start_lon === null || segment.end_lat === null || segment.end_lon === null) return;
@@ -43,30 +43,8 @@
         });
     }).catch((err) => {
         console.error(err);
-        document.querySelector('#status-text').innerText = "Failed to send location";
+        document.querySelector('#status-text').innerText = "Failed to load data";
     });
-    const secret = new URLSearchParams(window.location.search).get('secret');
-    if(secret) {
-        setInterval(() => {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const data = {lon: pos.coords.longitude, lat: pos.coords.latitude};
-                console.log(data);
-                console.log(`Acceleration along the X-axis ${acl.x}`);
-                console.log(`Acceleration along the Y-axis ${acl.y}`);
-                console.log(`Acceleration along the Z-axis ${acl.z}`);
-            });
-        }, 5000);
-        const acl = new Accelerometer({ frequency: 60 });
-
-        acl.start();
-        acl.addEventListener("reading", () => {
-            console.log(`Acceleration along the X-axis ${acl.x}`);
-            console.log(`Acceleration along the Y-axis ${acl.y}`);
-            console.log(`Acceleration along the Z-axis ${acl.z}`);
-        });
-    } else {
-        document.querySelector('#status-text').innerText = "Unauthenticated";
-    }
 </script>
 
 <style>
