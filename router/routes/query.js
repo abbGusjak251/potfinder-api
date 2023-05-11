@@ -7,7 +7,7 @@ query.post('/', async (req, res) => {
         // Get x acceleration and segment id from request body
         const query = req.body.query;
         const resp = await client.query(query);
-        return res.status(201).send(resp);
+        return res.status(201).send(resp.rows);
         
     } catch(err) {
         console.error(err);
