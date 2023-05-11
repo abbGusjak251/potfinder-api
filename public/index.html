@@ -27,26 +27,30 @@
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    fetch('http://localhost:3000/api/segments', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('axel123')}`
+        },
+        method: 'GET'
+    }).then((response) => response.json()).then((segments) => {
+        console.log(segments);
+        document.querySelector('#status-text').innerText = "Sending Location...";
+        segments.forEach(segment => {
+            console.log(segment)
+            if(segment.start_lat === null || segment.start_lon === null || segment.end_lat === null || segment.end_lon === null) return;
+            L.polyline([[segment.start_lat, segment.start_lon], [segment.end_lat, segment.end_lon]], {color: 'red'}).addTo(map);
+        });
+    }).catch((err) => {
+        console.error(err);
+        document.querySelector('#status-text').innerText = "Failed to send location";
+    });
     const secret = new URLSearchParams(window.location.search).get('secret');
     if(secret) {
         setInterval(() => {
             navigator.geolocation.getCurrentPosition((pos) => {
                 const data = {lon: pos.coords.longitude, lat: pos.coords.latitude};
                 console.log(data);
-                // fetch('http://localhost:3000/api/data', {
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'Authorization': `Basic ${btoa(secret)}`
-                //     },
-                //     body: JSON.stringify(data),
-                //     method: 'POST'
-                // }).then((response) => response.json()).then((data) => {
-                //     console.log(data);
-                //     document.querySelector('#status-text').innerText = "Sending Location...";
-                // }).catch((err) => {
-                //     console.error(err);
-                //     document.querySelector('#status-text').innerText = "Failed to send location";
-                // });
                 console.log(`Acceleration along the X-axis ${acl.x}`);
                 console.log(`Acceleration along the Y-axis ${acl.y}`);
                 console.log(`Acceleration along the Z-axis ${acl.z}`);
